@@ -1,11 +1,11 @@
 default:
-	docker build . -t pack \
+	docker build . -t raptor \
 	&& \
 	docker run -it \
-			   -v $(PWD)/../:/pack \
-			   --name pack \
-			   --user pack \
-			   pack \
+			   -v $(PWD)/../:/raptor \
+			   --name raptor \
+			   --user raptor \
+			   raptor \
 			   /bin/bash
 
 clean:

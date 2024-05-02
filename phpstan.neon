@@ -1,0 +1,26 @@
+parameters:
+    bootstrapFiles:
+        - ./vendor/autoload.php
+
+    fileExtensions:
+        - php
+
+    level: 9
+
+    paths:
+        - ./src
+
+    parallel:
+        maximumNumberOfProcesses: 2
+
+    tmpDir: ./.phpstan.cache
+
+    reportUnmatchedIgnoredErrors: true
+
+    # FYI: https://phpstan.org/blog/bring-your-exceptions-under-control
+    exceptions:
+        check:
+            missingCheckedExceptionInThrows: true
+            tooWideThrowType: true
+
+    checkGenericClassInNonGenericObjectType: true

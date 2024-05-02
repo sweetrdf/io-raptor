@@ -1,13 +1,22 @@
 {
     "name": "sweetrdf/io-raptor",
     "description": "Allows access to Raptor RDF parsing and serializing utility (https://librdf.org/raptor/rapper.html).",
-    "type": "project",
+    "type": "library",
     "keywords": ["RDF", "parser", "serializer", "n-triples", "n-quads", "turtle", "rdf-xml"],
     "license": "MIT",
+    "authors": [
+        {
+            "name": "Konrad Abicht",
+            "email": "hi@inspirito.de",
+            "homepage": "https://inspirito.de",
+            "role": "Developer"
+        }
+    ],
     "minimum-stability": "stable",
     "prefer-stable": true,
     "require": {
         "php": ">=8.0",
+        "sweetrdf/quick-rdf-io": "^1.1.1",
         "sweetrdf/rdf-interface": "^2.0"
     },
     "require-dev": {
@@ -16,10 +25,12 @@
         "phpunit/phpunit": "^10",
         "sweetrdf/quick-rdf": "^2.0.1"
     },
+    "suggest": {
+        "sweetrdf/quick-rdf": "Fast implementations of interfaces from sweetrdf\rdfInterface"
+    },
     "autoload": {
         "psr-4": {
-            "sweetrdf\\io\\raptor\\": "src/",
-            "Test\\": "test/",
+            "quickRdfIo\\Raptor\\": "src/",
             "Tests\\": "tests/"
         }
     }

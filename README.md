@@ -1,6 +1,7 @@
 # Raptor Parser (RDF)
 
-It provides a proxy class for [Raptor RDF parser utility](https://librdf.org/raptor/rapper.html).
+It provides a RDF parser using `rapper` command line tool from [Raptor RDF parsing and serializing utility](https://librdf.org/raptor/rapper.html).
+The generated internal PHP-representations (quads, ...) are compatible to [https://github.com/sweetrdf/rdfInterface](https://github.com/sweetrdf/rdfInterface) and can be used together with out rdfInterface implementations, such as [quickRdfIo](https://github.com/sweetrdf/quickRdfIo) to serialize RDF in another format for instance.
 
 ## Installation
 

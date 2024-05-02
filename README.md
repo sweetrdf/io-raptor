@@ -56,7 +56,7 @@ use \quickRdfIo\Raptor\Parser;
 
 $str = '_:foo <http://foo> <http://bar> .';
 
-// init a parser instance and read file handle
+// init a parser instance and read RDF string
 $parser = new Parser(new DataFactory());
 $quadsIterator = $parser->parse($str);
 

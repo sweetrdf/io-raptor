@@ -108,7 +108,7 @@ class Parser implements ParserInterface
 
             $this->path = $path;
         } else {
-            throw new Error('Given dir path for temporary files does not exist.');
+            throw new Error('Given dir path for temporary files does not exist: '.$path);
         }
     }
 

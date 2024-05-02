@@ -61,6 +61,10 @@ class Parser implements ParserInterface
         } else {
             throw new Exception('sys_get_temp_dir() return empty dir path');
         }
+
+        if (false === RapperCommand::rapperCommandIsAvailable()) {
+            throw new Exception('rapper command is not available (install raptor2-utils)');
+        }
     }
 
     public function __destruct()

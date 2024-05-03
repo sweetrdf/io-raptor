@@ -1,5 +1,5 @@
 {
-    "name": "sweetrdf/io-raptor",
+    "name": "sweetrdf/quick-rdf-io-raptor",
     "description": "Allows access to Raptor RDF parsing and serializing utility (https://librdf.org/raptor/rapper.html).",
     "type": "library",
     "keywords": ["RDF", "parser", "serializer", "n-triples", "n-quads", "turtle", "rdf-xml"],

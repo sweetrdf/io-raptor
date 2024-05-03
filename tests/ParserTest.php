@@ -123,7 +123,8 @@ class ParserTest extends TestCase
     public function testParseWithInvalidFormat(): void
     {
         $msg = 'Given format is invalid, it must be one of: ';
-        $msg .= 'atom, dot, html, json-triples, json, nquads, ntriples, rdfxml, rdfxml-abbrev, rdfxml-xmp, rss-1.0, turtle';
+        $msg .= 'application/rdf+xml, atom, dot, grddl, html, json-triples, json, jsonld, nquads, n-quads, ';
+        $msg .= 'ntriples, n-triples, rdfa, rdfxml, rdfxml-abbrev, rdfxml-xmp, rss-1.0, trig, turtle, text/turtle, ttl, xml';
         $this->expectExceptionMessage($msg);
 
         $subjectUnderTest = $this->getSubjectUnderTest();

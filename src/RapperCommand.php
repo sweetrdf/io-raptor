@@ -15,7 +15,7 @@ use quickRdfIo\RdfIoException;
 use ValueError;
 
 /**
- * This class is a proxy for the rapper command of Raptor RDF parsing and serializing utility.
+ * This class is a proxy for the rapper command of the Raptor RDF parsing and serializing utility.
  *
  * @see https://librdf.org/raptor/rapper.html
  *
@@ -35,19 +35,54 @@ class RapperCommand
             return '--guess';
         } else {
             $allowedFormats = [
+                'application/rdf+xml', // for compatibility reasons
                 'atom',
                 'dot',
+                'grddl',
                 'html',
                 'json-triples',
                 'json',
+                'jsonld',
                 'nquads',
+                'n-quads', // for compatibility reasons
                 'ntriples',
+                'n-triples', // for compatibility reasons
+                'rdfa',
                 'rdfxml',
                 'rdfxml-abbrev',
                 'rdfxml-xmp',
                 'rss-1.0',
+                'trig',
                 'turtle',
+                'text/turtle', // for compatibility reasons
+                'ttl', // for compatibility reasons
+                'xml', // for compatibility reasons
             ];
+
+            // normalize given formats to be compatible with rapper
+            $format = str_replace(
+                [
+                    'application/rdf+xml',
+                    'jsonld',
+                    'n-triples',
+                    'n-quads',
+                    'rdf',
+                    'text/turtle',
+                    'ttl',
+                    'xml',
+                ],
+                [
+                    'rdfxml',
+                    'json',
+                    'ntriples',
+                    'nquads',
+                    'rdfxml',
+                    'turtle',
+                    'turtle',
+                    'rdfxml',
+                ],
+                $format
+            );
 
             if (in_array($format, $allowedFormats, true)) {
                 return '-i '.$format;

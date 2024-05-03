@@ -28,39 +28,46 @@ class RapperCommand
      *
      * @throws \ValueError
      */
-    private static function getNormalizedFormat(string|null $string): string
+    private static function getNormalizedFormat(string|null $format): string
     {
-        if (null === $string) {
+        if (null === $format) {
+            // rapper will guess the format by itself
             return '--guess';
         } else {
-            switch ($string) {
-                case 'atom':
-                case 'dot':
-                case 'html':
-                case 'json-triples':
-                case 'json':
-                case 'nquads':
-                case 'ntriples':
-                case 'rdfxml':
-                case 'rdfxml-abbrev':
-                case 'rdfxml-xmp':
-                case 'rss-1.0':
-                case 'turtle':
-                    return $string;
-                default:
-                    throw new ValueError('Invalid $format given.');
+            $allowedFormats = [
+                'atom',
+                'dot',
+                'html',
+                'json-triples',
+                'json',
+                'nquads',
+                'ntriples',
+                'rdfxml',
+                'rdfxml-abbrev',
+                'rdfxml-xmp',
+                'rss-1.0',
+                'turtle',
+            ];
+
+            if (in_array($format, $allowedFormats, true)) {
+                return '-i '.$format;
+            } else {
+                $msg = 'Given format is invalid, it must be one of: '.implode(', ', $allowedFormats);
+                throw new ValueError($msg);
             }
         }
     }
 
+    /**
+     * Checks if rapper command is available.
+     */
     public static function rapperCommandIsAvailable(): bool
     {
-        // TODO: output buffer does not work properly, it still leaks output
-        ob_start();
-        passthru('rapper', $resultCode);
-        ob_end_clean();
+        $checkCommand = str_contains(PHP_OS, 'WIN') ? 'where' : 'command -v';
 
-        return 1 == $resultCode;
+        $shellResult = (string) shell_exec($checkCommand.' rapper');
+
+        return is_executable(trim($shellResult));
     }
 
     /**
@@ -89,17 +96,12 @@ class RapperCommand
         string $sourceFilepath,
         string $targetFilepath,
         string|null $sourceFileFormat = null
-    ): string {
+    ): void {
         $normalizedFormat = self::getNormalizedFormat($sourceFileFormat);
 
         if (file_exists($sourceFilepath) && file_exists($targetFilepath)) {
             $command = 'rapper --quiet '.$normalizedFormat.' -o ntriples '.$sourceFilepath.' > '.$targetFilepath;
-
-            ob_start();
-            // without this ob_-stuff rapper would print out info on the terminal/browser
-            shell_exec($command);
-            $output = (string) ob_get_clean();
-            return $output;
+            exec($command);
         } else {
             throw new RdfIoException('Either source or target filepath points to a non existing file');
         }

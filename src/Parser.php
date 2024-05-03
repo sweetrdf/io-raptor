@@ -83,7 +83,7 @@ class Parser implements ParserInterface
     public function setFormat(string|null $format): void
     {
         if (is_string($format) && 0 < strlen($format)) {
-            $this->format = '-i '.$format;
+            $this->format = $format;
         } elseif (null === $format) {
             $this->format = null;
         } else {

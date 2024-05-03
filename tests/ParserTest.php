@@ -35,7 +35,7 @@ class ParserTest extends TestCase
     private function getSubjectUnderTest(): Parser
     {
         $subjectUnderTest = new Parser(new DataFactory());
-        $subjectUnderTest->setDirPathForTemporaryFiles(__DIR__.'/../cache');
+        $subjectUnderTest->setDirPathForTemporaryFiles(__DIR__.'/../.cache');
         return $subjectUnderTest;
     }
 
@@ -106,6 +106,29 @@ class ParserTest extends TestCase
             ['http://bar http://baz 1', 'http://bar http://baz 2'],
             $this->generateTripleStringArray($iterator)
         );
+    }
+
+    public function testParseWithCustomFormat(): void
+    {
+        $subjectUnderTest = $this->getSubjectUnderTest();
+        $subjectUnderTest->setFormat('ntriples');
+        $iterator = $subjectUnderTest->parse($this->testRdfString);
+
+        $this->assertEquals(
+            ['http://bar http://baz 1', 'http://bar http://baz 2'],
+            $this->generateTripleStringArray($iterator)
+        );
+    }
+
+    public function testParseWithInvalidFormat(): void
+    {
+        $msg = 'Given format is invalid, it must be one of: ';
+        $msg .= 'atom, dot, html, json-triples, json, nquads, ntriples, rdfxml, rdfxml-abbrev, rdfxml-xmp, rss-1.0, turtle';
+        $this->expectExceptionMessage($msg);
+
+        $subjectUnderTest = $this->getSubjectUnderTest();
+        $subjectUnderTest->setFormat('invalid');
+        $subjectUnderTest->parse($this->testRdfString);
     }
 
     public function testParseStreamResource(): void

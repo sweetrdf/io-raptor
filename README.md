@@ -14,7 +14,7 @@ The generated internal PHP-representations (quads, ...) are compatible to [https
 
 ### Composer
 
-Install it using Composer: `composer require sweetrdf/io-raptor`.
+Install it using Composer: `composer require sweetrdf/quick-rdf-io-raptor`.
 
 You **need** an implementation of rdfInterfaces, such as quickRdf.
 For starters, just use `composer require sweetrdf/quick-rdf`

@@ -71,7 +71,6 @@ foreach ($quadsIterator as $quad ) {
 
 When using this class keep the following in mind:
 
-* Even though output buffering is used, `exec` keeps leaking output in the terminal (maybe in the browser too?). It is shown at least in PHPUnit tests.
 * The `Parser` class is basically a wrapper around the `rapper` command, which means input must be prepared for further processing (may impact performance). A readable local file as source is needed as well as a local file for generated N-Quads output, which is used for the internal NQuads parser later on.
 
 ## License

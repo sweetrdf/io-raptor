@@ -130,12 +130,24 @@ class RapperCommand
     public static function parseSourceFileAndPutGeneratedRdfIntoTargetFile(
         string $sourceFilepath,
         string $targetFilepath,
-        string|null $sourceFileFormat = null
+        string|null $sourceFileFormat = null,
+        string|null $baseUri = null
     ): void {
         $normalizedFormat = self::getNormalizedFormat($sourceFileFormat);
 
         if (file_exists($sourceFilepath) && file_exists($targetFilepath)) {
-            $command = 'rapper --quiet '.$normalizedFormat.' -o ntriples '.$sourceFilepath.' > '.$targetFilepath;
+            // build command string
+            $command = 'rapper --quiet --ignore-errors ';
+
+            if (is_string($baseUri) && 0 < strlen($baseUri)) {
+                $command .= ' --input-uri '.$baseUri.' ';
+            }
+
+            $command .= $normalizedFormat.' -o ntriples '.$sourceFilepath.' > '.$targetFilepath;
+
+            // note: using escapeshellcmd here would escape the > in the command which breaks the whole thing
+
+            // run the command
             exec($command);
         } else {
             throw new RdfIoException('Either source or target filepath points to a non existing file');

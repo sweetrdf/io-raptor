@@ -30,6 +30,8 @@ use ValueError;
  */
 class Parser implements ParserInterface
 {
+    private string|null $baseUri = null;
+
     private DataFactoryInterface $dataFactory;
 
     /**
@@ -51,8 +53,9 @@ class Parser implements ParserInterface
      * @throws \Error
      * @throws \Exception
      */
-    public function __construct(DataFactoryInterface $dataFactory)
+    public function __construct(DataFactoryInterface $dataFactory, string|null $baseUri = null)
     {
+        $this->baseUri = $baseUri;
         $this->dataFactory = $dataFactory;
 
         $tempDir = sys_get_temp_dir();
@@ -78,6 +81,8 @@ class Parser implements ParserInterface
     }
 
     /**
+     * Tells the parser to not guess the format, but to use the given one.
+     *
      * @throws \ValueError
      */
     public function setFormat(string|null $format): void
@@ -192,7 +197,8 @@ class Parser implements ParserInterface
         RapperCommand::parseSourceFileAndPutGeneratedRdfIntoTargetFile(
             $sourceFilePath,
             $targetFilepath,
-            $this->format
+            $this->format,
+            $this->baseUri
         );
 
         // create NQuads parser to parse generated target file

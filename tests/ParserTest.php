@@ -32,9 +32,9 @@ class ParserTest extends TestCase
         }
     }
 
-    private function getSubjectUnderTest(): Parser
+    private function getSubjectUnderTest(string|null $baseUri): Parser
     {
-        $subjectUnderTest = new Parser(new DataFactory());
+        $subjectUnderTest = new Parser(new DataFactory(), $baseUri);
         $subjectUnderTest->setDirPathForTemporaryFiles(__DIR__.'/../.cache');
         return $subjectUnderTest;
     }
@@ -55,10 +55,29 @@ class ParserTest extends TestCase
 
     public function testParseString(): void
     {
-        $iterator = $this->getSubjectUnderTest()->parse($this->testRdfString);
+        $iterator = $this->getSubjectUnderTest(null)->parse($this->testRdfString);
 
         $this->assertEquals(
             ['http://bar http://baz 1', 'http://bar http://baz 2'],
+            $this->generateTripleStringArray($iterator)
+        );
+    }
+
+    public function testParseStringWithBaseUri(): void
+    {
+        $str = '@prefix : <http://example.org/prefix/> .
+        @prefix rdf: <http://example.org/rdf/> .
+
+        <name> rdf:type rdf:Property .
+        :phone rdf:type rdf:Property .';
+
+        $iterator = $this->getSubjectUnderTest('http://test/base/')->parse($str);
+
+        $this->assertEquals(
+            [
+                'http://test/base/name http://example.org/rdf/type http://example.org/rdf/Property',
+                'http://example.org/prefix/phone http://example.org/rdf/type http://example.org/rdf/Property',
+            ],
             $this->generateTripleStringArray($iterator)
         );
     }
@@ -70,7 +89,7 @@ class ParserTest extends TestCase
         file_put_contents($filepath, $this->testRdfString);
         $resource = fopen($filepath, 'r');
 
-        $iterator = $this->getSubjectUnderTest()->parse($resource);
+        $iterator = $this->getSubjectUnderTest(null)->parse($resource);
 
         $this->assertEquals(
             ['http://bar http://baz 1', 'http://bar http://baz 2'],
@@ -87,7 +106,7 @@ class ParserTest extends TestCase
         $response = $this->createMock(ResponseInterface::class);
         $response->method('getBody')->willReturn($stream);
 
-        $iterator = $this->getSubjectUnderTest()->parse($response);
+        $iterator = $this->getSubjectUnderTest(null)->parse($response);
 
         $this->assertEquals(
             ['http://bar http://baz 1', 'http://bar http://baz 2'],
@@ -100,7 +119,7 @@ class ParserTest extends TestCase
         $stream = $this->createMock(StreamInterface::class);
         $stream->method('__toString')->willReturn($this->testRdfString);
 
-        $iterator = $this->getSubjectUnderTest()->parse($stream);
+        $iterator = $this->getSubjectUnderTest(null)->parse($stream);
 
         $this->assertEquals(
             ['http://bar http://baz 1', 'http://bar http://baz 2'],
@@ -110,7 +129,7 @@ class ParserTest extends TestCase
 
     public function testParseWithCustomFormat(): void
     {
-        $subjectUnderTest = $this->getSubjectUnderTest();
+        $subjectUnderTest = $this->getSubjectUnderTest(null);
         $subjectUnderTest->setFormat('ntriples');
         $iterator = $subjectUnderTest->parse($this->testRdfString);
 
@@ -127,7 +146,7 @@ class ParserTest extends TestCase
         $msg .= 'ntriples, n-triples, rdfa, rdfxml, rdfxml-abbrev, rdfxml-xmp, rss-1.0, trig, turtle, text/turtle, ttl, xml';
         $this->expectExceptionMessage($msg);
 
-        $subjectUnderTest = $this->getSubjectUnderTest();
+        $subjectUnderTest = $this->getSubjectUnderTest(null);
         $subjectUnderTest->setFormat('invalid');
         $subjectUnderTest->parse($this->testRdfString);
     }
@@ -139,7 +158,7 @@ class ParserTest extends TestCase
         file_put_contents($filepath, $this->testRdfString);
         $resource = fopen($filepath, 'r');
 
-        $iterator = $this->getSubjectUnderTest()->parseStream($resource);
+        $iterator = $this->getSubjectUnderTest(null)->parseStream($resource);
 
         $this->assertEquals(
             ['http://bar http://baz 1', 'http://bar http://baz 2'],
@@ -152,7 +171,7 @@ class ParserTest extends TestCase
         $stream = $this->createMock(StreamInterface::class);
         $stream->method('__toString')->willReturn($this->testRdfString);
 
-        $iterator = $this->getSubjectUnderTest()->parseStream($stream);
+        $iterator = $this->getSubjectUnderTest(null)->parseStream($stream);
 
         $this->assertEquals(
             ['http://bar http://baz 1', 'http://bar http://baz 2'],
